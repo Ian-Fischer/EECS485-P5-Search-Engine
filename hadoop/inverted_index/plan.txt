@@ -20,7 +20,9 @@ mapreduce1(initial input):
     - have the output be txt files
 
 mapreduce1 output:
-    all the tf_ik's 
+    - all the tf_ik's (frequency of term tk in document di)
 
-mapreduce2(mapreduce1 output):
-    - 
+mapreduce2(tf_ik's):
+    - now, we have a list of docid_word \t tf_ik
+    - in the map stage, we need to map each (docid_word \t tf_ik) --> (word \t 1)
+    - in the reduce, we group all of the keys, now we know how many diff documents the word appears in (n_k)

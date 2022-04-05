@@ -1,9 +1,11 @@
 """Map 1."""
 import sys
 import re
+import csv
 
 for line in sys.stdin:
-    args = line.split(",")
+    # get args as list using csv reader
+    args = list(csv.reader(line))
     doc_id = args[0]
     doc_title = args[1]
     doc_text = args[2]
@@ -18,5 +20,6 @@ for line in sys.stdin:
         stop_words = stop_file.readLines()
         for word in stop_words:
             words.remove(word)
-    # print all the words
+    # print all the words in form doc_id _ word \t 1
     for word in words:
+        print(f"{doc_id}_{word}\t1")

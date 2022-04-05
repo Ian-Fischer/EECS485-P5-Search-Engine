@@ -1,0 +1,26 @@
+mapreduce pipeline plan
+
+initial input: csv with bunch of wiki articles, a line for each, with doc_id, doc_title, doc_content
+
+variables in tfidf calculations:
+    - w_ik: tfidf score of a term t_k in document d_i
+    - t_k: term k
+    - d_i: document i 
+    - tf_ik: the number of times term k (t_k) appears in document i (d_i)
+    - idf_k: inverse document frequency of term k in a given collective of documents C (= log(N/n_k))
+    - N: number of documents in a given collection calculations
+    - n_k: the number of documents that have term k 
+    - d_i: normalization factor for document i. uses every term in that document. calc by sum over all terms in the doc of (tf_ik * idf_k)**2
+
+mapreduce1(initial input):
+    - we are going to clean the input files here, including merging the doc title and the doc body, 
+      putting everything to lowercase, and removing stopwords
+    - for each document, map word to "{doc_id}_{word}\t1"
+    - then, in reduce, get how many times each word appears in each document
+    - have the output be txt files
+
+mapreduce1 output:
+    all the tf_ik's 
+
+mapreduce2(mapreduce1 output):
+    - 

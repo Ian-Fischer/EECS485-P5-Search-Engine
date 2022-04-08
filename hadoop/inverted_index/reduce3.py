@@ -2,7 +2,7 @@
 import sys
 import json
 import itertools
-from inverted_index.reduce0 import keyfunc
+from reduce0 import keyfunc
 
 if __name__ == "__main__":
     # now we just need to get the final output
@@ -10,15 +10,15 @@ if __name__ == "__main__":
         # for the one line in each group, calc w_ik
         for line in group:
             # split the line up
-            line = line.partition("\t")
+            line = line.split("\t")
             # dictionary
-            dict_str = line[4]
+            dict_str = line[2]
             dictionary = json.loads(dict_str)
             # idf_k
-            idf_k = line[2]
+            idf_k = float(line[1])
             # iterate over and calculate
-            for key, value in dictionary:
+            for docid, value in dictionary.items():
                 # tf_ik, add wik
-                dictionary[key].append((value*idf_k)**2)
+                dictionary[docid].append((float(value[0])*idf_k)**2)
         finaldct_str = json.dumps(dictionary, sort_keys=True)
         print(f"{key}\t{idf_k}\t{finaldct_str}")

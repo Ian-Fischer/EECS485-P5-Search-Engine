@@ -12,6 +12,14 @@ def reduce_one_group(key, group):
         word_count += int(count)
     print(f"{key}\t{word_count}")
 
+def count_files(group):
+    """Count all the files."""
+    word_count = 0
+    for line in group:
+        count = line.partition("\t")[2]
+        word_count += int(count)
+    print(word_count)
+
 
 def keyfunc(line):
     """Return the key from a TAB-delimited key-value pair."""
@@ -20,8 +28,8 @@ def keyfunc(line):
 
 def main():
     """Divide sorted lines into groups that share a key."""
-    for key, group in itertools.groupby(sys.stdin, keyfunc):
-        reduce_one_group(key, group)
+    for _, group in itertools.groupby(sys.stdin, keyfunc):
+        count_files(group)
 
 
 if __name__ == "__main__":

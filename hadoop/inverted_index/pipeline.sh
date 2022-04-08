@@ -59,18 +59,18 @@ madoop \
   -reducer ./reduce3.py
 
 # Job 4
-madoop \ 
+madoop \
   -input output3 \
   -output output4 \
   -mapper ./map4.py \
   -reducer ./reduce4.py
 
 # Job 5
-madoop \ 
+madoop \
   -input output4 \
   -output output5 \
   -mapper ./map5.py \
-  -reducer ./reduce5.py
+  -reducer ./reduce5.py \
   -numReduceTasks 3
 
 # REMINDER: don't forget to set -numReduceTasks in your last stage.  You'll

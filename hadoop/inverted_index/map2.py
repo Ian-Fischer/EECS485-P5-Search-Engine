@@ -8,14 +8,14 @@ if __name__ == "__main__":
     for line in sys.stdin:
         # for each word, output word \t doc_id #
         # first, split over the tabs
-        row = line.partition("\t")
+        row = line.split("\t")
         # docid_word
         key = row[0]
         # split the key
         docid = key.split("_")[0]
         word = key.split("_")[1]
         # word frequency in given docid
-        word_frq = row[1]
+        word_frq = row[1].strip()
         # now we have docid, word, word frequency
         output_dict = {
             docid: [word_frq]

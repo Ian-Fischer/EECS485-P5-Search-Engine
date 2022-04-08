@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Map 1."""
 import sys
 import re
@@ -20,9 +21,10 @@ if __name__ == "__main__":
         words = text.split() # split into whitespace-delimited
         # remove stop words
         with open("stopwords.txt",'r') as stop_file:
-            stop_words = stop_file.readLines()
-            for word in stop_words:
-                words.remove(word)
+            stop_words = dict(stop_file.readLines())
+            for word in words:
+                if word in stop_words:
+                    words.remove(word)
         # print all the words in form doc_id _ word \t 1
         for word in words:
             print(f"{doc_id}_{word}\t1")

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import sys
 import json
 import math
@@ -20,8 +21,5 @@ if __name__ == "__main__":
         #idfk = log_10(N/n_k)
         d_i = 0
         idf_k = math.log10(N/n_k)
-        for key, value in tf_iks.items():
-            # we need to append idfk to the list
-            value.append(idf_k)
-        altered_dict_str = json.dumps(tf_iks)
-        print(f"{key}\t{altered_dict_str}")
+        altered_dict_str = json.dumps(tf_iks, sort_keys=True)
+        print(f"{key}\t{idf_k}\t{altered_dict_str}")

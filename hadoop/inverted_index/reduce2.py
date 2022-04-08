@@ -1,4 +1,4 @@
-from multiprocessing.sharedctypes import Value
+#!/usr/bin/env python3
 import sys
 import json
 import itertools

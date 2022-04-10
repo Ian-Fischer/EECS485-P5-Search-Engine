@@ -28,7 +28,5 @@ if __name__ == "__main__":
             for key in sorted(docids_dict):
                 tf_ik = docids_dict[key][0]
                 mag_d_i = docids_dict[key][1]
-                output_string = output_string+f"{key} {tf_ik} {mag_d_i}"
+                output_string = output_string+f" {key} {tf_ik} {mag_d_i}"
             print(f"{word} {idf_k} "+output_string)
-            
-            

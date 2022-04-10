@@ -5,14 +5,12 @@ import re
 import csv
 
 if __name__ == "__main__":
-    for line in sys.stdin:
-        # set csv max size
-        csv.field_size_limit(sys.maxsize)
-        # get args as list using csv reader
-        args = list(csv.reader(line))
-        doc_id = args[0][0]
-        doc_title = args[2][0]
-        doc_text = args[4][0]
+     # set csv max size
+    csv.field_size_limit(sys.maxsize)
+    for line in csv.reader(sys.stdin):
+        doc_id = line[0]
+        doc_title = line[1]
+        doc_text = line[2]
         
         # Cleaning
         text = doc_title+ " " +doc_text # combine title and body

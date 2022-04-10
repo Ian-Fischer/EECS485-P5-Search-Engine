@@ -22,13 +22,13 @@ if __name__ == "__main__":
             word_dict_str = json.dumps({word: word_info}, sort_keys=True)
             print(f"{docid}\t{w_ik}\t{word_dict_str}")
 
-        """
-        word   idfk     {docid1{tfik, wik}, docid2{tfik, wik}, ..., docidn}
+        # """
+        # word   idfk     {docid1{tfik, wik}, docid2{tfik, wik}, ..., docidn}
 
-        -->
+        # -->
 
-        docid1    wik    {word: tfik, idfk}
-        ...
-        docidn    wik    {word: tfik, idfk}
+        # docid1    wik    {word: tfik, idfk}
+        # ...
+        # docidn    wik    {word: tfik, idfk}
     
-        """
+        # """

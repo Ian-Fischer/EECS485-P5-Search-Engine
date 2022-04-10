@@ -29,6 +29,10 @@ if __name__ == "__main__":
                 tf_ik = docids_dict[key][0]
                 mag_d_i = docids_dict[key][1]
                 output_string = output_string+f" {key} {tf_ik} {mag_d_i}"
-            print(f"{word} {idf_k}"+output_string)
+<<<<<<< HEAD
+            print(f"{word} {idf_k} "+output_string)
             
             
+=======
+            print(f"{word} {idf_k} "+output_string)
+>>>>>>> 94a6566e59044f30a3c1caf314238f72e4b38e45

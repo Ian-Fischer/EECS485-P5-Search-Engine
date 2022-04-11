@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""MapReduce stage 3 reduce."""
 import sys
 import json
 import itertools

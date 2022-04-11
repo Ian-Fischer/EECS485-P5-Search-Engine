@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""MapReduce stage 5 map."""
 import string
 import sys
 import json
@@ -22,4 +23,3 @@ if __name__ == "__main__":
             string_dct = json.dumps(doc_info)
             #        docid      word    idf_k      {docid: tf_ik, d_i}
             print(f"{sep}\t{word}\t{info[1]}\t{string_dct}")
-        

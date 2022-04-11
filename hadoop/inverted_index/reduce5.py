@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
+"""MapReduce stage 5 reduce."""
 import sys
 import json
 import itertools
-from heapq import merge
 from reduce0 import keyfunc
+
 
 def keyfunc2(line):
     """Return the key from a TAB-delimited key-value pair."""
     return line.split("\t")[1]
+
 
 if __name__ == "__main__":
     # separate by docid % 3

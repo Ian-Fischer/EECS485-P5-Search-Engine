@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""MapReduce stage 4 map."""
 import sys
 import json
 
@@ -10,7 +11,7 @@ if __name__ == "__main__":
         info = line.split("\t")
         word = info[0]
         idf_k = info[1]
-        #dictionary
+        # dictionary
         docid_dict_str = info[2]
         docid_dict = json.loads(docid_dict_str)
         # {docid: tfik, wik}
@@ -21,14 +22,3 @@ if __name__ == "__main__":
             word_info[1] = idf_k
             word_dict_str = json.dumps({word: word_info}, sort_keys=True)
             print(f"{docid}\t{w_ik}\t{word_dict_str}")
-
-        # """
-        # word   idfk     {docid1{tfik, wik}, docid2{tfik, wik}, ..., docidn}
-
-        # -->
-
-        # docid1    wik    {word: tfik, idfk}
-        # ...
-        # docidn    wik    {word: tfik, idfk}
-    
-        # """

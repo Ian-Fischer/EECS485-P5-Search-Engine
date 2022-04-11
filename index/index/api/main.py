@@ -1,22 +1,29 @@
 """Index Server."""
-import flask
 import math
-from flask import g
 import re
-import index
 import pathlib
 from collections import Counter
+import flask
+import index
 
 stop_words = []
 pagerank = {}
 inverted_index = {}
 
 
+def get_tfidf(q_vect, d_vect, tmp, doc):
+    """Get tfidf for given vectors."""
+    q_dot_d = sum(i[0] * i[1] for i in zip(q_vect, d_vect))
+    norm_q = math.sqrt(sum(q**2 for q in q_vect))
+    norm_d = math.sqrt(inverted_index[tmp]["docs"][doc]["norm_factor"])
+    return q_dot_d / (norm_q * norm_d)
+
+
 def clean_query(query):
     """Clean given query."""
-    query = re.sub(r"[^a-zA-Z0-9 ]+", "", query) # remove non-alphanumerics
-    query = query.casefold() # convert upper to lower case
-    query = query.split() # split into whitespace-delimited
+    query = re.sub(r"[^a-zA-Z0-9 ]+", "", query)
+    query = query.casefold()
+    query = query.split()
     # remove stop words
     query = [word for word in query if word not in stop_words]
     return query
@@ -39,25 +46,10 @@ def read_pagerank(index_dir):
             line = line.replace("\n", "")
             line = line.split(",")
             pagerank[line[0]] = float(line[1])
-        
+
 
 def read_inverted_index(index_dir):
-    """
-    Read inverted index into memory.
-    inverted_index = {
-        word: {
-            idf_k,
-            docs: {
-                docid: {
-                    tf_ik
-                    norm_factor
-                }
-            }
-            ...
-        }
-        ...
-    }
-    """
+    """Read inverted index into memory."""
     # get the path that we set when starting server
     path = index_dir / "inverted_index" / index.app.config["INDEX_PATH"]
     with open(path, "r", encoding="utf-8") as file:
@@ -118,8 +110,9 @@ def search_results():
     all_docs = []
     # get all the docs that each word appears in
     for word in query:
-        if word in inverted_index.keys():
-            all_docs.append(set(inverted_index[word]["docs"].keys()))
+        if word in inverted_index:
+            keys = inverted_index[word]["docs"].keys()
+            all_docs.append(set(keys))
         # if a word is not in our index, return empty
         else:
             return flask.jsonify(**{"hits": []}), 200
@@ -130,29 +123,26 @@ def search_results():
         docs = docs.intersection(doc)
     # now, we have all docs that all words appear in
     # next, calc score for each doc
-    count = Counter(query)
     hits = []
     for doc in docs:
         # build q: <term freq in query>*<idf_k>
         q_vect = []
         # build d_i: <term freq in doc>*<idf>
         d_vect = []
-        temp_word = ""
+        tmp = ""
         for word in query:
-            temp_word = word
-            q_vect.append(count[word]*inverted_index[word]["idf_k"])
-            d_vect.append(inverted_index[word]["docs"][doc]["tf_ik"]*inverted_index[word]["idf_k"])
-        q_dot_d = sum(i[0] * i[1] for i in zip(q_vect, d_vect))
-        norm_q = math.sqrt(sum(q**2 for q in q_vect))
-        norm_d = math.sqrt(inverted_index[temp_word]["docs"][doc]["norm_factor"])
-        tfidf = q_dot_d / (norm_q * norm_d)
+            tmp = word
+            q_vect.append(Counter(query)[word]*inverted_index[word]["idf_k"])
+            john = inverted_index[word]["docs"][doc]["tf_ik"]
+            kyle = inverted_index[word]["idf_k"]
+            d_vect.append(john*kyle)
+            tfidf = get_tfidf(q_vect, d_vect, tmp, doc)
         hits.append({
             "docid": int(doc),
             "score": pr_weight*pagerank[doc] + (1 - pr_weight)*tfidf
         })
-    # sort the results by score and return 
-    hits = sorted(hits, key=lambda x: x["score"], reverse=True)
+    # sort the results by score and return
     output = {
-        "hits": hits
+        "hits": sorted(hits, key=lambda x: x["score"], reverse=True)
     }
     return flask.jsonify(**output), 200

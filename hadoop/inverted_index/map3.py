@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""MapReduce stage 3 map."""
 import sys
 import json
 import math
@@ -18,7 +19,7 @@ if __name__ == "__main__":
         dict_str = info[1]
         tf_iks = json.loads(dict_str)
         n_k = int(info[2])
-        #idfk = log_10(N/n_k)
+        # idfk = log_10(N/n_k)
         d_i = 0
         idf_k = math.log10(N/n_k)
         altered_dict_str = json.dumps(tf_iks, sort_keys=True)

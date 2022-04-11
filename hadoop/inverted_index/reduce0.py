@@ -12,6 +12,7 @@ def reduce_one_group(key, group):
         word_count += int(count)
     print(f"{key}\t{word_count}")
 
+
 def count_files(group):
     """Count all the files."""
     word_count = 0

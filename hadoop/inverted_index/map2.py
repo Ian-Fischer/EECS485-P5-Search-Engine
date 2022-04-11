@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""MapReduce stage 2 map."""
 import sys
 import json
 

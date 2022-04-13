@@ -1,0 +1,18 @@
+{% extends "index.html" %}
+{% block content %} 
+    {% for result in results %}
+        <a class="doc_url">
+            <p>{{result.url}}</p>
+        </a>
+        <div class="doc_title">
+            <p>{{result.title}}</p>
+        </div>
+        <div class="doc_summary">
+            <p>{{result.summary}}</p>
+        </div>
+    {% else %}
+        <div class="no_results">
+            <p>No search results found!</p>
+        </div>
+    {% endfor %}
+{% endblock %}

@@ -10,15 +10,16 @@
         <div class="feed">
             <div class="ask485">
                 {% if results %}
-                    <h1>Slong &#11093</h1>
+                    <h1>&#10175Slong</h1>
                 {% else %}
-                    <h1>Sling &#10175</h1>
+                    <h1>&#10160Sling</h1>
                 {% endif %}
             </div>
             <div class="search_bar">
-                <form action="{{url_for('sling')}}" method="GET">
+                <form action="{{url_for('show_index')}}" method="GET">
                     <div><input type="text" name="q" value="{{query}}"/></div>
-                    <div><input type="range" name="w" min="0" max="1" step="0.01" value="{{weight}}"></div>
+                    <div class="pagerank_weight">Pagerank Weight</div>
+                    <input type="range" name="w" min="0" max="1" step="0.01" value="{{weight}}">
                     <input type="submit" value="Search"/>
                 </form>
             </div>

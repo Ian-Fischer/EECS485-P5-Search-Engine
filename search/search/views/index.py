@@ -1,6 +1,7 @@
 """Server-side dynamic pages."""
 import search
 import flask
+import itertools
 import sqlite3
 import requests
 import threading
@@ -13,25 +14,11 @@ def index_server_req(url, results, index):
     r = requests.get(url)
     # put the results into the correct index
     dictionaries = r.json()["hits"]
-    results[index] = [(x["score"], x["docid"]) for x in dictionaries]
+    results[index] = sorted([(x["score"], x["docid"]) for x in dictionaries], reverse=True)
 
-    
-@search.app.route("/", methods=["GET"])
-def show_index():
-    """Renders the home page."""
-    # build context w/ no search & weight & results
-    context = {
-        "query": "",
-        "weight": "0.5",
-    }
-    return flask.render_template("index.html", **context)
 
-@search.app.route("/", methods=['GET'])
-def sling():
+def sling(query, weight):
     """Sling there like slingwear."""
-    # Get the query & weight
-    query = flask.request.args.get('q')
-    weight = flask.request.args.get('w')
     # Build the url
     base = search.app.config["SEARCH_INDEX_SEGMENT_API_URLS"]
     url0 = base[0]+f"?q={query}&w={weight}"
@@ -50,14 +37,10 @@ def sling():
     thread0.join()
     thread1.join()
     thread2.join()
-    # Use heapq.merge() to combine them
-    num_results = 0
-    ranked_pages = []
-    for line in heapq.merge(*results):
-        ranked_pages.append(line)
-        num_results += 1
-        if num_results == 10:
-            break
+    # Combine lists into one iterable
+    results = list(itertools.chain.from_iterable(results))
+    # get 10 largest
+    ranked_pages = heapq.nlargest(10, results, key=lambda x: x[0])
     # Connect to database
     connection = search.model.get_db()
     connection.row_factory = sqlite3.Row
@@ -82,7 +65,22 @@ def sling():
         "results": ranked_pages
     }
     # Display to user
-    return flask.render_template("results.html", **context)
-    
+    return context
 
-    
+
+@search.app.route("/", methods=["GET"])
+def show_index():
+    """Renders the home page."""
+    # if there was a query, process with sling()
+    query = flask.request.args.get("q")
+    weight = flask.request.args.get("w", default=0.5)
+    if query is not None:
+        context = sling(query, weight)
+        return flask.render_template("results.html", **context)
+    # else, build the generic home page
+    context = {
+        "query": "",
+        "weight": weight,
+    }
+    return flask.render_template("index.html", **context)
+

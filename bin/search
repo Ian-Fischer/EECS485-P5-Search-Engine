@@ -1,4 +1,5 @@
 #!/bin/bash
+# search
 set -Eeuo pipefail
 set -x
 
@@ -11,23 +12,23 @@ if [ $# -ne 1 ]; then
     exit
 fi 
 
-
 case $1 in 
     "start")
         ./bin/index status
-        status = $?
-        if [ ! -f "var/index.sqlite3" ]
+        status=$?
+        if [ ! -f "var/index.sqlite3" ];
         then 
             # database does not exist
             echo "Error: can't find search database var/index.sqlite3"
             echo "Try: ./bin/indexdb create"
             exit 1
-        elif [$status -eq 1]
+        elif $0 status &> /dev/null; 
         then 
             # index server is stopped use ./bin/index status
             echo "Error: index server is not running"
             echo "Try ./bin/index start"
-        elif [pgrep -f "flask run --host 0.0.0.0 --port 8000" &> /dev/null]
+            exit 1
+        elif pgrep -f "flask run --host 0.0.0.0 --port 8000" &> /dev/null;
         then
             # search server is already running
             echo "Error: search server is already running"
@@ -38,10 +39,12 @@ case $1 in
             FLASK_APP=search flask run --host 0.0.0.0 --port 8000 &> var/log/search.log &
         fi
         ;;
+
     "stop")
         echo "stopping search server ..."
         pkill -f 'flask run --host 0.0.0.0 --port 8000' || true
         ;;
+
     "restart")
         echo "stopping search server ..."
         pkill -f 'flask run --host 0.0.0.0 --port 8000' || true
@@ -50,14 +53,18 @@ case $1 in
         rm -f var/log/search.log
         FLASK_APP=search flask run --host 0.0.0.0 --port 8000 &> var/log/search.log &
         ;;
+
     "status")
         if pgrep -f "flask run --host 0.0.0.0 --port 8000" &> /dev/null
         then 
             echo "search server running"
+            exit 0
         else
             echo "search server stopped"
+            exit 1
         fi
         ;;
+
     *)
         usage
         exit 1

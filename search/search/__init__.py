@@ -1,6 +1,6 @@
 """Initialize search application."""
-import flask
 import os
+import flask
 
 app = flask.Flask(__name__, template_folder="templates")
 app.config.from_object('search.config')

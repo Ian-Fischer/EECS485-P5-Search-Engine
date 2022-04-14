@@ -1,28 +1,30 @@
 {% extends "index.html" %}
 {% block content %} 
     <div class="docs">
-        {% for result in results %}
-            {% if result.url != "" %}
-                <a class="doc_url" href="{{result.url}}">{{result.url}}</a>
-            {% else %}
-            <a class="doc_url" >No url available</a>
-            {% endif %}
-            <div class="doc_title">
-                <p>{{result.title}}</p>
-            </div>
-            {% if result.url != "" %}
-                <div class="doc_summary">
-                    <p>{{result.summary}}</p>
+        {% if results %}
+            {% for result in results %}
+                {% if result.url != "" %}
+                    <a class="doc_url" href="{{result.url}}">{{result.url}}</a>
+                {% else %}
+                    <a class="doc_url" >No url available</a>
+                {% endif %}
+                <div class="doc_title">
+                    <p>{{result.title}}</p>
                 </div>
-            {% else %}
-                <div class="doc_summary">
-                    <p>No summary available</p>
-                </div>
-            {% endif %}
+                {% if result.url != "" %}
+                    <div class="doc_summary">
+                        <p>{{result.summary}}</p>
+                    </div>
+                {% else %}
+                    <div class="doc_summary">
+                        <p>No summary available</p>
+                    </div>
+                {% endif %}
+            {% endfor %}
         {% else %}
             <div class="no_results">
                 <p>No search results found!</p>
             </div>
-        {% endfor %}
+        {% endif %}
     </div>
 {% endblock %}

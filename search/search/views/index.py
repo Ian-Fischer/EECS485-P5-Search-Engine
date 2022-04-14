@@ -1,20 +1,21 @@
 """Server-side dynamic pages."""
-import search
-import flask
-import itertools
 import sqlite3
-import requests
 import threading
 import heapq
+import itertools
+import requests
+import flask
+import search
 
-def index_server_req(url, results, index):
+
+def idx_svr_req(url, res, idx):
     """Make request to index server."""
     # make a request to the server using url
-    # TODO: exception handling??
-    r = requests.get(url)
+    # exception handling??
+    req = requests.get(url)
     # put the results into the correct index
-    dictionaries = r.json()["hits"]
-    results[index] = sorted([(x["score"], x["docid"]) for x in dictionaries], reverse=True)
+    dicti = req.json()["hits"]
+    res[idx] = sorted([(x["score"], x["docid"]) for x in dicti], reverse=True)
 
 
 def sling(query, weight):
@@ -27,11 +28,11 @@ def sling(query, weight):
     # List to store the results in
     results = [None, None, None]
     # Call the index server to get page rankings
-    thread0 = threading.Thread(target=index_server_req, args=(url0, results, 0))
+    thread0 = threading.Thread(target=idx_svr_req, args=(url0, results, 0))
     thread0.start()
-    thread1 = threading.Thread(target=index_server_req, args=(url1, results, 1))
+    thread1 = threading.Thread(target=idx_svr_req, args=(url1, results, 1))
     thread1.start()
-    thread2 = threading.Thread(target=index_server_req, args=(url2, results, 2))
+    thread2 = threading.Thread(target=idx_svr_req, args=(url2, results, 2))
     thread2.start()
     # close all threads after they are made
     thread0.join()
@@ -45,13 +46,13 @@ def sling(query, weight):
     connection = search.model.get_db()
     connection.row_factory = sqlite3.Row
     # Build context by going to database & getting info
-    # TODO: not in db?
-    for i, result in enumerate(ranked_pages):
+    # not in db?
+    for i, url0 in enumerate(ranked_pages):
         document = connection.execute(
             "SELECT title, url, summary "
             "FROM Documents "
             "WHERE docid = ? ",
-            (result[1], )
+            (url0[1], )
         ).fetchone()
         ranked_pages[i] = {
             "title": document[0],
@@ -70,7 +71,7 @@ def sling(query, weight):
 
 @search.app.route("/", methods=["GET"])
 def show_index():
-    """Renders the home page."""
+    """Render home page."""
     # if there was a query, process with sling()
     query = flask.request.args.get("q")
     weight = flask.request.args.get("w", default=0.5)
@@ -83,4 +84,3 @@ def show_index():
         "weight": weight,
     }
     return flask.render_template("index.html", **context)
-

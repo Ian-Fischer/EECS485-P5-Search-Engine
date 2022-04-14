@@ -116,6 +116,9 @@ def search_results():
         # if a word is not in our index, return empty
         else:
             return flask.jsonify(**{"hits": []}), 200
+    # if query empty
+    if len(all_docs) == 0:
+        return flask.jsonify(**{"hits": []}), 200
     docs = all_docs[0]
     # go thorugh all matching documents for each word, and intersect
     # stores only docs that contain every word

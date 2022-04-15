@@ -25,5 +25,7 @@ if __name__ == "__main__":
             # merge all the dictionaries
             word_dict = json.loads(line[2])
             words_dict.update(word_dict)
+        # keys of this dictionary are words, sort_keys
+        # makes sure that the words are sorted!
         words_dict_str = json.dumps(words_dict, sort_keys=True)
         print(f"{docid}\t{sum_wik}\t{words_dict_str}")

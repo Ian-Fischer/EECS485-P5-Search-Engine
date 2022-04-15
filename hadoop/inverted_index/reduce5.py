@@ -7,7 +7,7 @@ from reduce0 import keyfunc
 
 
 def keyfunc2(line):
-    """Return the key from a TAB-delimited key-value pair."""
+    """Return the word from a TAB-delimited key-value pair."""
     return line.split("\t")[1]
 
 
@@ -27,6 +27,7 @@ if __name__ == "__main__":
                 docids_dict.update(docid_dict)
                 idf_k = line[2]
             output_string = ""
+            # sorted ensures docid in ascending lex. order
             for key in sorted(docids_dict):
                 tf_ik = docids_dict[key][0]
                 mag_d_i = docids_dict[key][1]

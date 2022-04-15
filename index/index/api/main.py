@@ -145,6 +145,8 @@ def search_results():
             "score": pr_weight*pagerank[doc] + (1 - pr_weight)*tfidf
         })
     # sort the results by score and return
+    # hits will be empty if there are no docs that
+    # have all of the words
     output = {
         "hits": sorted(hits, key=lambda x: x["score"], reverse=True)
     }

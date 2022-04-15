@@ -15,7 +15,8 @@ if __name__ == "__main__":
         word_dict_str = line[2]
         word_dict = json.loads(word_dict_str)
         # loop over all words and output "docid%3 word idfk docid di tf_ik"
-        for word, info in word_dict.items():
+        # iterate over sorted just to make sure
+        for word, info in sorted(word_dict.items()):
             doc_info = {
                 docid: [info[0], d_i]
             }
